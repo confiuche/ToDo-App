@@ -1,12 +1,29 @@
-
+import User from "../model/userModel.js"
 
 //create user account
 export const createUserController = async(req,res)=>{
-    const {firstname, lastname}=req.body;
+    const {firstname, lastname, profilephoto, email, password} = req.body
     try{
+      //check if user already exist
+      const foundUser = await User.findOne({email});
+      
+        if(foundUser){
+          res.json({
+            status:"error",
+            message:"User with that email already exit"
+          })
+        }else{
+          const user = await User.create({
+            firstname,
+            lastname,
+            email,
+            password
+          })
+        }
+      
       res.json({
           status:"success",
-          data:`Congratulation ${firstname} ${lastname}you have successfully register`
+          data:user
       })
     } catch (error) {
       res.json(error.message);
