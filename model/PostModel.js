@@ -20,6 +20,9 @@ const postSchema = new mongoose.Schema(
     photo:{
         type:String,
     },
+    status:{
+        type:String
+    },
     date:{
         type:Date
     },
