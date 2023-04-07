@@ -94,14 +94,14 @@ export const profileController = async(req,res)=>{
     const userid = req.params.id;
     //console.log(req.headers);
     try{
-      const token = obtainTokenFromHeader(req)
+      const token = obtainTokenFromHeader(req);
       //console.log(token);
-      console.log(userAuth);
-      const foundUser = await User.findById(userAuth);
+      //console.log(req.userAuth);
+      const foundUser = await User.findById(userAuth)
       if(!foundUser){
         return res.json({
           status:"error",
-          message:"No user associated with that id"
+          message:"No user associated with that id",
         })
       }
 
@@ -112,7 +112,7 @@ export const profileController = async(req,res)=>{
     } catch (error) {
       res.json(error.message)
     }
-  };
+  }
 
 
   //update users
