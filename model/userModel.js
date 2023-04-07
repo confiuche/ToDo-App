@@ -20,10 +20,6 @@ const userSchema = new mongoose.Schema({
             type:String,
             required:[true, "password is required"],
         },
-        isBlocked:{
-            type:Boolean,
-            default:false,
-        },
         isAdmin:{
             type:Boolean,
             default:false,
@@ -33,12 +29,6 @@ const userSchema = new mongoose.Schema({
             enum:["Admin", "Editor", "Guest"],
             default:"Guest"
         },
-        blocked: [
-            {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
-            }
-        ],
         posts:[
         {
             type:mongoose.Schema.Types.ObjectId,
