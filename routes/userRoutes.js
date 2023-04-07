@@ -1,15 +1,18 @@
 import express from 'express'
-import { createUserController, deleteUserController, displayAllController, profileController, updateUserController } from '../controller/usersController.js';
+import { createUserController, deleteUserController, displayAllController, profileController, updateUserController, userLoginCtrl } from '../controller/usersController.js';
+import { isLogin } from '../middlewares/isLogin.js'
 
 const userRoutes = express.Router();
 
 
 //create user
 userRoutes.post("/create", createUserController);
+//login user
+userRoutes.post("/login",userLoginCtrl);
 //get users
-userRoutes.get("", displayAllController);
+userRoutes.get("",isLogin, displayAllController);
 //profile
-userRoutes.get("/:id", profileController);
+userRoutes.get("/profile",isLogin, profileController);
 //update users
 userRoutes.put("/:id", updateUserController);
 //delete users
