@@ -22,7 +22,7 @@ userRoutes.delete("/:id", deleteUserController);
 //displayTask
 userRoutes.get("")
 //addTask
-userRoutes.post("/addTask",addTaskController)
+userRoutes.post("/addTask",isLogin,addTaskController)
 //deleteTask
 userRoutes.delete("")
 
