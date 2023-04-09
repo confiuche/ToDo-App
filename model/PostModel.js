@@ -1,21 +1,10 @@
-import { time } from "console";
 import mongoose,{Schema} from "mongoose";
 
-const postSchema = new mongoose.Schema(
+const todoTaskSchema = new mongoose.Schema(
     {
-        title:{
+    content:{
         type:String,
-        required:[true,"Title of the post is required"],
-        trim:true
-    },
-    description:{
-        type:String,
-        required:[true,"Description of the post is required"],
-    },
-    category:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Category",
-        required:[true,"Category of the [post is required"],
+        required:true
     },
     photo:{
         type:String,
@@ -24,10 +13,8 @@ const postSchema = new mongoose.Schema(
         type:String
     },
     date:{
-        type:Date
-    },
-    time:{
-        type:time
+        type:Date,
+        default:Date.now
     },
 },
 {
@@ -35,6 +22,6 @@ const postSchema = new mongoose.Schema(
     toJSON:{virtuals:true}
 }
 );
-const Post = mongoose.model("Post",postSchema);
+const Post = mongoose.model("Post",todoTaskSchema);
 
 export default Post;
