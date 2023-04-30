@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
                 ref:"User",
             },
         ],
-        posts:[
+        taskpost:[
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"Post"
