@@ -25,6 +25,6 @@ const todoTaskSchema = new mongoose.Schema(
     toJSON:{virtuals:true}
 }
 );
-const Post = mongoose.model("Post",todoTaskSchema);
+const PostTask = mongoose.model("Post",todoTaskSchema);
 
-export default Post;
+export default PostTask;
