@@ -6,7 +6,7 @@ import { obtainTokenFromHeader } from "../utils/obtainTokenFromHeader.js";
 
 //create user account
 export const createUserController = async(req,res)=>{
-    const {firstname, lastname, username, profilephoto, email, password} = req.body
+    const {firstname, lastname, profilephoto, email, password} = req.body
     try{
       //check if user already exist
       const foundUser = await User.findOne({email});
@@ -91,13 +91,13 @@ export const displayAllController = async(req,res)=>{
 
   //profile
 export const profileController = async(req,res)=>{
-    const userid = req.params.id;
+    //const userid = req.params.id;
     //console.log(req.headers);
     try{
       const token = obtainTokenFromHeader(req);
       //console.log(token);
-      console.log(req.userAuth);
-      const foundUser = await User.findById(userAuth)
+      //console.log(req.userAuth);
+      const foundUser = await User.findById(req.userAuth)
       if(!foundUser){
         return res.json({
           status:"error",
@@ -115,18 +115,27 @@ export const profileController = async(req,res)=>{
   }
 
 
-  //update users
+//update users
 export const updateUserController = async(req,res)=>{
-    const userid = req.params.id;
-    try{
+  //const userid = req.params.id;
+  try{
+    console.log()
+    const updateUser = await User.findByIdAndUpdate(req.userAuth,{
+      
+      $set:{
+        email:req.body.email
+      }
+    },{
+      new:true
+    })
       res.json({
           status:"success",
-          data:`users account updated successfully`
-      })
-    } catch (error) {
+          data:updateUser
+  })
+  } catch(error){
       res.json(error.message);
-    }
-  };
+  }
+}
 
   //Delete user
 export const deleteUserController = async(req,res)=>{
