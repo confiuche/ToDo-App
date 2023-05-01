@@ -32,5 +32,59 @@ export const createPostTaskController = async(req,res) => {
     }
 }
 
+//Display All task
+export const displayAllTask = async(req,res)=>{
+    try{
+      const displayalltask = await PostTask.find({});
+      res.json({
+          status:"success",
+          data:displayalltask
+      })
+    } catch (error) {
+      res.json(error.message);
+    }
+  };
 
-//
+
+//update task
+export const updateTaskCtrl = async(req, res) => {
+    const { status } = req.body
+    try {
+        const foundStatus = await PostTask.findById(req.params.id)
+        console.log(foundStatus);
+
+        if(!foundStatus){
+            res.json({
+                status:"error",
+                message:"record not found"
+            })
+        }
+
+        const found = await PostTask.findByIdAndUpdate(req.params.id,{
+            $set:{
+                status:req.body.status
+            }
+            },{
+                new:true
+        })
+        res.json({
+            status:"success",
+            data:found
+        })
+    } catch (error) {
+        res.json(error.message)
+    }
+}
+
+
+//delete task
+export const deleteTaskCtrl = async(req, res) => {
+    try {
+        res.json({
+            status:"success",
+            data:"Task deleted successfully"
+        })
+    } catch (error) {
+        res.json(error.message)
+    }
+}

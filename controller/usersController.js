@@ -14,7 +14,7 @@ export const createUserController = async(req,res)=>{
         if(foundUser){
           res.json({
             status:"error",
-            message:"User with that email already exit"
+            message:"Email already exit"
           })
         }else{
           //hash password
@@ -59,6 +59,7 @@ export const userLoginCtrl = async (req,res)=>{
           })
 
       }
+      
       res.json({
           status:"success",
           data:{
@@ -130,7 +131,7 @@ export const updateUserController = async(req,res)=>{
     })
       res.json({
           status:"success",
-          data:updateUser
+          data:`Account updated successfully`
   })
   } catch(error){
       res.json(error.message);
@@ -139,7 +140,8 @@ export const updateUserController = async(req,res)=>{
 
   //Delete user
 export const deleteUserController = async(req,res)=>{
-    const userid = req.params.id;
+    const deleteAccount = await User.findByIdAndDelete(req.userAuth)
+    console.log(deleteAccount)
     try{
       res.json({
           status:"success",

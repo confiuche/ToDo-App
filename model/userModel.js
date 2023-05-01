@@ -86,7 +86,7 @@ userSchema.virtual("fullname").get(function(){
 
 //count post show the user how post he/she has posted
 userSchema.virtual("postCounts").get(function(){
-    return this.posts.length;
+    return this.taskpost.length;
 })
 
 //followers count

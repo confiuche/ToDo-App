@@ -16,9 +16,9 @@ userRoutes.get("",isLogin, displayAllController);
 //profile
 userRoutes.get("/profile",isLogin, profileController);
 //update users
-userRoutes.put("/:id", updateUserController);
+userRoutes.put("/update-account",isLogin, updateUserController);
 //delete users
-userRoutes.delete("/:id", deleteUserController);
+userRoutes.delete("/delete-account",isLogin, deleteUserController);
 
 
 export default userRoutes;
