@@ -1,5 +1,5 @@
 import express from 'express'
-import { createPostTaskController, displayAllTask, updateTaskCtrl } from '../controller/postTaskController.js'
+import { createPostTaskController, deleteTaskCtrl, displayAllTask, updateTaskCtrl } from '../controller/postTaskController.js'
 import { isLogin } from '../middlewares/isLogin.js'
 
 const taskRoutes = express.Router();
@@ -11,6 +11,6 @@ taskRoutes.get("/display-all-task", isLogin, displayAllTask)
 //update task
 taskRoutes.put("/update-account/:id", isLogin, updateTaskCtrl)
 //delete task
-taskRoutes.delete("/delete-task/:id", isLogin, createPostTaskController)
+taskRoutes.delete("/delete-task/:id", isLogin, deleteTaskCtrl)
 
 export default taskRoutes

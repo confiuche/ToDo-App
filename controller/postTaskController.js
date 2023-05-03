@@ -34,15 +34,19 @@ export const createPostTaskController = async(req,res) => {
 
 //Display All task
 export const displayAllTask = async(req,res)=>{
-    try{
-      const displayalltask = await PostTask.find({});
-      res.json({
-          status:"success",
-          data:displayalltask
-      })
-    } catch (error) {
-      res.json(error.message);
-    }
+    const showAll = await PostTask.find({})
+    console.log(showAll);
+   try{
+       return res.json({
+            status:"success",
+            data:showAll
+        })
+    
+      } catch (error) {
+        res.json(error.message);
+      }
+
+    
   };
 
 
@@ -79,10 +83,13 @@ export const updateTaskCtrl = async(req, res) => {
 
 //delete task
 export const deleteTaskCtrl = async(req, res) => {
+
     try {
+        const taskDelete = await PostTask.findByIdAndDelete(req.params.id)
+        console.log(taskDelete);
         res.json({
             status:"success",
-            data:"Task deleted successfully"
+            data:taskDelete
         })
     } catch (error) {
         res.json(error.message)
