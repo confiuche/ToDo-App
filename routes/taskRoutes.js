@@ -7,7 +7,7 @@ const taskRoutes = express.Router();
 //create task
 taskRoutes.post("/create-task", isLogin, createPostTaskController)
 //display all task
-taskRoutes.get("/display-all-task", isLogin, displayAllTask)
+taskRoutes.get("/display-all-task/:id", isLogin, displayAllTask)
 //update task
 taskRoutes.put("/update-account/:id", isLogin, updateTaskCtrl)
 //delete task
