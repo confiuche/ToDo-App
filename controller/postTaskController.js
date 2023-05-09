@@ -45,10 +45,25 @@ export const displayAllTask = async(req,res)=>{
       } catch (error) {
         res.json(error.message);
       }
-
     
   };
 
+
+  //Display all task by admin
+  export const displayTaskByAdmin = async(req,res)=>{
+    const displayTask = await PostTask.find({}).populate("user")
+
+    try {
+        res.json({
+            status:"success",
+            data:displayTask
+        })
+    } catch (error) {
+        res.json(error.message)
+    }
+  }
+
+  
 
 //update task
 export const updateTaskCtrl = async(req, res) => {
@@ -95,3 +110,45 @@ export const deleteTaskCtrl = async(req, res) => {
         res.json(error.message)
     }
 }
+
+
+
+// // delete post by admin
+// export const deleteTaskByAdmin = async (req, res) => {
+//     const taskRemove = await PostTask.findById(req.params.id);
+//     try {
+//       if (!taskRemove) {
+//         return res.json({
+//           status: "error",
+//           message: "post not found",
+//         });
+//       }
+//       await taskRemove.remove();
+//       res.json({
+//         status: "success",
+//         data: "post deleted successfully",
+//       });
+//     } catch (error) {
+//       res.json(error.message);
+//     }
+//   };
+
+// delete post by admin
+export const deleteTaskByAdmin = async (req, res) => {
+    const taskRemove = await PostTask.findByIdAndDelete(req.params.id);
+    try {
+      if (!taskRemove) {
+        return res.json({
+          status: "error",
+          message: "Task not found",
+        });
+      }
+      
+      res.json({
+        status: "success",
+        data: "Task deleted successfully",
+      });
+    } catch (error) {
+      res.json(error.message);
+    }
+  };
