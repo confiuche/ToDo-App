@@ -32,9 +32,9 @@ export const createPostTaskController = async(req,res) => {
     }
 }
 
-//Display All task
+//Display All task by user
 export const displayAllTask = async(req,res)=>{
-    const showAll = await PostTask.find({})
+    const showAll = await PostTask.find({user:req.params.id})
     console.log(showAll);
    try{
        return res.json({
