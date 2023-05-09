@@ -2,6 +2,8 @@ import express from 'express'
 import { createUserController, deleteUserController, displayAllController, profileController, updateUserController, userLoginCtrl } from '../controller/usersController.js';
 import { isLogin } from '../middlewares/isLogin.js'
 import { validateUser } from '../middlewares/userValidation.js';
+import { isAdmin } from '../middlewares/isAdmin.js';
+
 
 
 const userRoutes = express.Router();
