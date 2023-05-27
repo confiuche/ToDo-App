@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUserController, deleteUserController, displayAllController, profileController, updateUserController, userLoginCtrl } from '../controller/usersController.js';
+import { createUserController, deleteUserController, displayAllController, forgetPasswordCtr, profileController, resetPasswordCtr, updateUserController, userLoginCtrl } from '../controller/usersController.js';
 import { isLogin } from '../middlewares/isLogin.js'
 import { validateUser } from '../middlewares/userValidation.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
@@ -21,6 +21,10 @@ userRoutes.get("/profile",isLogin, profileController);
 userRoutes.put("/update-account",isLogin, updateUserController);
 //delete users
 userRoutes.delete("/delete-account",isLogin, deleteUserController);
+//forget password
+userRoutes.post("/forget-password", forgetPasswordCtr)
+//reset password
+userRoutes.post("/reset-password", resetPasswordCtr)
 
 
 export default userRoutes;
