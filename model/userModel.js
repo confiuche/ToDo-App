@@ -72,6 +72,12 @@ const userSchema = new mongoose.Schema({
         enum:["Bronze","Silver","Gold"],
         default:"Bronze",
     },
+    resetToken:{
+        type:String,
+    },
+    reseTokenExpiration:{
+        type:Date,
+    }
     },
     {
         timestamps:true,
