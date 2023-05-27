@@ -1,21 +1,18 @@
 import PostTask from "../model/PostTaskModel.js";
 import User from "../model/userModel.js";
+import AppError from "../utils/AppErr.js";
 
-export const createPostTaskController = async(req,res) => {
-    const {content, status, date} = req.body
+export const createPostTaskController = async(req,res,next) => {
+    const {content, status} = req.body
     try {
         const postOwner = await User.findById(req.userAuth)
         if(postOwner.isBlocked){
-            return res.json({
-                status:"error",
-                message:"Sorry, Your account is blocked by admin"
-            })
+            return next(AppError("Sorry, Your account is blocked by admin",400))
         }
 
         const createTask = await PostTask.create({
             content,
             status,
-            date,
             user:postOwner._id
         })
 
@@ -28,7 +25,7 @@ export const createPostTaskController = async(req,res) => {
         await postOwner.save()
 
     } catch (error) {
-        res.json(error.message)
+        next(AppError(error.message))
     }
 }
 
