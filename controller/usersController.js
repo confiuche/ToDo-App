@@ -2,20 +2,21 @@ import User from "../model/userModel.js"
 import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken.js";
 import { obtainTokenFromHeader } from "../utils/obtainTokenFromHeader.js";
+import AppError from "../utils/AppErr.js"
+import sendEmail from "../utils/emailUtils.js";
+import jwt from 'jsonwebtoken'
+
 
 
 //create user account
-export const createUserController = async(req,res)=>{
+export const createUserController = async(req,res,next)=>{
     const {firstname, lastname, profilephoto, email, password} = req.body
     try{
       //check if user already exist
       const foundUser = await User.findOne({email});
       
         if(foundUser){
-          res.json({
-            status:"error",
-            message:"Email already exit"
-          })
+          return next(AppError("Email already exit",409))
         }else{
           //hash password
           const salt = await bcrypt.genSalt(10);
@@ -34,29 +35,25 @@ export const createUserController = async(req,res)=>{
       })
     }
     } catch (error) {
-      res.json(error.message);
+      next(AppError(error.message));
     }
   }
 
 
   //login user
-export const userLoginCtrl = async (req,res)=>{
+export const userLoginCtrl = async (req,res,next)=>{
   const {email,password} = req.body;
   try { 
       //get email
       const isUserFound = await User.findOne({email});
       if(!isUserFound){
-          return res.json({
-              message:"Wrong login credential",
-          })
+        return next(AppError("Wrong username or password",401))
       }
 
       //get password
       const isPasswordFound = await bcrypt.compare(password,isUserFound.password);
       if(!isPasswordFound){
-          return res.json({
-              message:"Wrong login credential"
-          })
+        return next(AppError("Wrong username or password",401))
 
       }
       
@@ -71,7 +68,7 @@ export const userLoginCtrl = async (req,res)=>{
       })
 
   }catch(error){
-      res.json(error.message);
+      next(AppError(error.message))
   }
 }
 
@@ -85,7 +82,7 @@ export const displayAllController = async(req,res)=>{
           data:users
       })
     } catch (error) {
-      res.json(error.message);
+      next(AppError(error.message))
     }
   };
   
@@ -100,10 +97,7 @@ export const profileController = async(req,res)=>{
       //console.log(req.userAuth);
       const foundUser = await User.findById(req.userAuth)
       if(!foundUser){
-        return res.json({
-          status:"error",
-          message:"No user associated with that id",
-        })
+        return next(AppError("No user associated with that id",404))
       }
 
       res.json({
@@ -111,7 +105,7 @@ export const profileController = async(req,res)=>{
           data:foundUser
       })
     } catch (error) {
-      res.json(error.message)
+      next(AppError(error.message))
     }
   }
 
@@ -134,7 +128,7 @@ export const updateUserController = async(req,res)=>{
           data:`Account updated successfully`
   })
   } catch(error){
-      res.json(error.message);
+      next(AppError(error.message))
   }
 }
 
@@ -143,11 +137,49 @@ export const deleteUserController = async(req,res)=>{
     const deleteAccount = await User.findByIdAndDelete(req.userAuth)
     console.log(deleteAccount)
     try{
+      // if(!deleteAccount){
+      //   next(AppError())
+      // }
       res.json({
           status:"success",
           data:`users account deleted successfully`
       })
     } catch (error) {
-      res.json(error.message);
+      next(AppError(error.message))
     }
   };
+
+
+  export const forgetPasswordCtr = async(req, res, next) => {
+    try {
+      const {email} = req.body;
+      //check if email is valid
+      const user = await User.findOne({email});
+      if(!user){
+        return next(AppError(`user with ${email} does not exist`,404))
+      }
+
+      //generate a reset token
+      const resetToken = jwt.sign({userId: user._id}, process.env.JWT_KEY,{
+        expiresIn:'1h'
+      })
+
+      //set the  reset token and its expiration on the user obj
+
+      user.resetToken = resetToken;
+      user.reseTokenExpiration = Date.now() + 3600;
+      
+      user.save()
+      //send password reset email
+      const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+      const html = `<h3>RESET PASSWORD</h3><br/><> Below is the link to reset your password<br>This link only valid for 1 hour, please do not share with anyone<hr/><br/>click <strong><a href='${resetUrl}'>here</a></strong> to reset your password</p><p>Having any issue? kindly contact our support team</p>`
+      await sendEmail(user.email,'Reset Your Password', html);
+
+      res.status(200).json({message:`Password reset sent successfully to your email ${user.email}` })
+
+    } catch (error) {
+      next(AppError(error.message))
+    } 
+  }
+
+  
