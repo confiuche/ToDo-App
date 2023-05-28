@@ -12,25 +12,30 @@ database()
 
 const app = express();
 
-app.use((req,res,next) => {
-    res.setHeader("Access-Contol-Allow-Origin", "*");
-    res.setHeader("Access-Contol-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
-        "Access-Content-Allow-Methods",
-        "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
     );
     next();
-})
-app.use(
+  });
+  
+  app.use(
     cors({
-        credientials:true,
-        origin:true,
-        allowedHeaders: "*"
+      credentials: true,
+      origin: true,
+      allowedHeaders: "*",
     })
-)
-
-app.use(express.json());
-app.options("*", cors())
+  );
+  
+  app.use(express.json());
+  
+  app.options("*", cors());
 
 const PORT = process.env.PORT || 8080;
 
