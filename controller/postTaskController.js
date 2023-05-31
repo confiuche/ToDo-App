@@ -3,7 +3,7 @@ import User from "../model/userModel.js";
 import AppError from "../utils/AppErr.js";
 
 export const createPostTaskController = async(req,res,next) => {
-    const {content, status} = req.body
+    const {title, status} = req.body
     try {
         const postOwner = await User.findById(req.userAuth)
         if(postOwner.isBlocked){
@@ -11,7 +11,7 @@ export const createPostTaskController = async(req,res,next) => {
         }
 
         const createTask = await PostTask.create({
-            content,
+            title,
             status,
             user:postOwner._id
         })
