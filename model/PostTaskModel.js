@@ -2,17 +2,13 @@ import mongoose,{Schema} from "mongoose";
 
 const todoTaskSchema = new mongoose.Schema(
     {
-    content:{
+    title:{
         type:String,
         required:true,
         trim:true
     },
     status:{
         type:String
-    },
-    date:{
-        type:Date,
-        default:Date.now
     },
     user:{
         type:mongoose.Schema.Types.ObjectId,
