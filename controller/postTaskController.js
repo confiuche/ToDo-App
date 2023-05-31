@@ -30,81 +30,96 @@ export const createPostTaskController = async(req,res,next) => {
 }
 
 //Display All task by user
-export const displayAllTask = async(req,res)=>{
-    const showAll = await PostTask.find({user:req.params.id})
-    console.log(showAll);
+export const displayAllTask = async(req,res,next)=>{
+   // const allTask = await PostTask.find({user:req.params.id})
+    //console.log(showAll)
+    const allTask = await PostTask.find({})
+
    try{
-       return res.json({
+
+            res.json({
             status:"success",
-            data:showAll
+            data:allTask
         })
     
       } catch (error) {
-        res.json(error.message);
+        next(AppError(error.message))
       }
     
   };
 
 
   //Display all task by admin
-  export const displayTaskByAdmin = async(req,res)=>{
-    const displayTask = await PostTask.find({}).populate("user")
+//   export const displayTaskByAdmin = async(req,res)=>{
+//     const displayTask = await PostTask.find({}).populate("user")
 
-    try {
-        res.json({
-            status:"success",
-            data:displayTask
-        })
-    } catch (error) {
-        res.json(error.message)
-    }
-  }
+//     try {
+//         res.json({
+//             status:"success",
+//             data:displayTask
+//         })
+//     } catch (error) {
+//         res.json(error.message)
+//     }
+//   }
 
   
 
 //update task
-export const updateTaskCtrl = async(req, res) => {
-    const { status } = req.body
+export const updateTaskCtrl = async(req, res,next) => {
+    const { title } = req.body
     try {
         const foundStatus = await PostTask.findById(req.params.id)
-        console.log(foundStatus);
+        //console.log(foundStatus);
 
         if(!foundStatus){
-            res.json({
-                status:"error",
-                message:"record not found"
-            })
+            next(AppError("record not found",404))
         }
 
         const found = await PostTask.findByIdAndUpdate(req.params.id,{
             $set:{
-                status:req.body.status
+                title:req.body.title
             }
             },{
                 new:true
         })
         res.json({
             status:"success",
-            data:found
+            message:"Task update successfully"
         })
     } catch (error) {
-        res.json(error.message)
+        next(AppError(error.message))
     }
 }
 
 
 //delete task
-export const deleteTaskCtrl = async(req, res) => {
+export const deleteTaskCtrl = async(req, res, next) => {
 
     try {
-        const taskDelete = await PostTask.findByIdAndDelete(req.params.id)
-        console.log(taskDelete);
-        res.json({
+        const taskId = req.params.id;
+        const task = await PostTask.findById(taskId)
+
+        const taskDelete = task.user.toString()  === req.userAuth.toString()
+
+        if(!task){
+            return next(AppError("Task not found",404))
+        }
+        
+        if(!taskDelete){
+            return next(AppError("Your are unable to delete this post",405))
+        }
+
+        if(taskDelete){
+        await PostTask.findByIdAndDelete(taskId);
+            res.json({
             status:"success",
-            data:taskDelete
+            message: "Task deleted successfully"
         })
+    }
+
     } catch (error) {
-        res.json(error.message)
+        next(AppError(error.message))
     }
 }
 
@@ -131,21 +146,21 @@ export const deleteTaskCtrl = async(req, res) => {
 //   };
 
 // delete post by admin
-export const deleteTaskByAdmin = async (req, res) => {
-    const taskRemove = await PostTask.findByIdAndDelete(req.params.id);
-    try {
-      if (!taskRemove) {
-        return res.json({
-          status: "error",
-          message: "Task not found",
-        });
-      }
+// export const deleteTaskByAdmin = async (req, res, next) => {
+//     const taskRemove = await PostTask.findByIdAndDelete(req.params.id);
+//     try {
+//       if (!taskRemove) {
+//         return res.json({
+//           status: "error",
+//           message: "Task not found",
+//         });
+//       }
       
-      res.json({
-        status: "success",
-        data: "Task deleted successfully",
-      });
-    } catch (error) {
-      res.json(error.message);
-    }
-  };
+//       res.json({
+//         status: "success",
+//         data: "Task deleted successfully",
+//       });
+//     } catch (error) {
+//       res.json(error.message);
+//     }
+//   };
