@@ -1,9 +1,13 @@
 import express from 'express'
-import { createUserController, deleteUserController, displayAllController, forgetPasswordCtr, profileController, resetPasswordCtr, updateUserController, userLoginCtrl } from '../controller/usersController.js';
+import { createUserController, deleteUserController, displayAllController, forgetPasswordCtr, profileController, profilePhotoUploadCtr, resetPasswordCtr, updateUserController, userLoginCtrl } from '../controller/usersController.js';
 import { isLogin } from '../middlewares/isLogin.js'
 import { validateUser } from '../middlewares/userValidation.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
+import multer from 'multer';
+import storage from '../config/cloudinary.js';
 
+
+const upload = multer({storage})
 
 
 const userRoutes = express.Router();
@@ -15,6 +19,8 @@ userRoutes.post("/create", validateUser, createUserController);
 userRoutes.post("/login",userLoginCtrl);
 //get users
 userRoutes.get("",isLogin, displayAllController);
+//upload profile photo
+userRoutes.post("/profile-image", isLogin, upload.single("profile"), profilePhotoUploadCtr)
 //profile
 userRoutes.get("/profile",isLogin, profileController);
 //update users
