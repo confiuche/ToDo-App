@@ -37,30 +37,30 @@ const userSchema = new mongoose.Schema({
             enum:["Admin", "Editor", "Guest"],
             default:"Guest"
         },
-        views:[
-            {
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"User",
-            },
-        ],
-        followers:[
-            {
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"User",
-            },
-        ],
-        following:[
-            {
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"User",
-            },
-        ],
-        blocked:[
-            {
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"User",
-            },
-        ],
+        // views:[
+        //     {
+        //         type:mongoose.Schema.Types.ObjectId,
+        //         ref:"User",
+        //     },
+        // ],
+        // followers:[
+        //     {
+        //         type:mongoose.Schema.Types.ObjectId,
+        //         ref:"User",
+        //     },
+        // ],
+        // following:[
+        //     {
+        //         type:mongoose.Schema.Types.ObjectId,
+        //         ref:"User",
+        //     },
+        // ],
+        // blocked:[
+        //     {
+        //         type:mongoose.Schema.Types.ObjectId,
+        //         ref:"User",
+        //     },
+        // ],
         taskpost:[
         {
             type:mongoose.Schema.Types.ObjectId,
