@@ -72,6 +72,37 @@ export const userLoginCtrl = async (req,res,next)=>{
   }
 }
 
+//upload profile photo
+export const profilePhotoUploadCtr = async(req,res,next) =>{
+  try {
+    //find user that login 
+    const userToUpload = await User.findById(req.userAuth)
+
+    if(!userToUpload){
+      return next(AppError("User not found",404))
+    }
+
+    
+    if(req.file){
+      await User.findByIdAndUpdate(req.userAuth,{
+        $set:{
+          profilephoto:req.file.path
+        },
+      },{
+        new:true
+      }
+      )
+      res.json({
+        status:"success",
+        data:"profile photo uploaded successfully"
+      })
+    }
+
+  } catch (error) {
+    next(AppError(error.message))
+  }
+}
+
 
   //display all user
 export const displayAllController = async(req,res)=>{
