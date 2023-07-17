@@ -5,6 +5,8 @@ import { database } from "./config/dBconnect.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import cors from "cors"
 import globalErrorHandler from "./middlewares/globalErrorHandler.js"
+//const bodyParser = require('body-parser');
+import bodyParser from "body-parser";
 
 
 dotenv.config()
@@ -34,6 +36,7 @@ app.use((req, res, next) => {
   );
   
   app.use(express.json());
+  app.use(bodyParser.json());
   
   app.options("*", cors());
 
